@@ -33,6 +33,7 @@ parser.add_argument('-s', '--sentencepiece', default='./data/sentencepiece.model
 parser.add_argument('-v', '--vocab', default='./data/vocab.bin', help='Chatbotのモデル用のVocabファイルを指定します．SentencePieceのものとは別です．')
 parser.add_argument('-m', '--model', default='./data/checkpoints/best_model.pt', help='モデルの重みファイルを指定します．')
 parser.add_argument('-w', '--word_vec', default='./data/style_sensitive.bin', help='Style-sensitive word vectorsの学習済みモデルを指定します．')
+parser.add_argument('-f', '--first_persona', default='やるでやんす', help='最初にセットするペルソナを指定します．')
 
 parser.add_argument('-p', '--port', default=5000, type=int, help='ポート番号を指定します．')
 parser.add_argument('-ip', '--ip', default='localhost', help='IPもしくはホストを指定します．')
@@ -72,7 +73,7 @@ api = Flask(__name__)
 
 response = "hello"
 
-current_persona = _get_persona("やるでやんす")
+current_persona = _get_persona(args.first_persona)
 
 
 @api.route("/generateReply", methods=["POST"])
