@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 
 import torch
@@ -82,9 +82,15 @@ current_persona = _get_persona(args.first_persona)
 
 @api.route("/generateReply", methods=["POST"])
 def generate_reply():
+    """
+    JSONでリプライを返す
+    """
     global current_persona
     sentence = request.form["sentence"]
-    return chatbot(sentence, current_persona).replace(" ", "").replace("▁", " ")
+
+    reply = chatbot(sentence, current_persona).replace(" ", "").replace("▁", " ")
+
+    return jsonify({"reply": reply})
 
 
 @api.route("/setPersona", methods=["POST"])
@@ -98,6 +104,14 @@ def set_persona():
         return "Set: " + sentence + " -> " + str(words)
     else:
         return "Set failed"
+
+
+@api.route("/getPersona", methods=["GET"])
+def get_persona():
+    sentence = request.form["sentence"]
+    persona_tensor = _get_persona(sentence)
+
+    return jsonify({"persona_tensor": persona_tensor.tolist()})
 
 
 def main():
