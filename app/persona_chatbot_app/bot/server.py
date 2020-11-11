@@ -34,6 +34,7 @@ parser.add_argument('-v', '--vocab', default='./data/vocab.bin', help='Chatbot�
 parser.add_argument('-m', '--model', default='./data/checkpoints/best_model.pt', help='モデルの重みファイルを指定します．')
 parser.add_argument('-w', '--word_vec', default='./data/style_sensitive.bin', help='Style-sensitive word vectorsの学習済みモデルを指定します．')
 parser.add_argument('-f', '--first_persona', default='やるでやんす', help='最初にセットするペルソナを指定します．')
+parser.add_argument('-d', '--device', default='', help='モデルを利用するデバイスを指定します．空の場合，自動で選択をします．')
 
 parser.add_argument('-p', '--port', default=5000, type=int, help='ポート番号を指定します．')
 parser.add_argument('-ip', '--ip', default='localhost', help='IPもしくはホストを指定します．')
@@ -53,7 +54,10 @@ fields = JapaneseTextWithID(tokenizer, max_length=opt.max_length)
 fields.src.vocab = vocab
 fields.tgt.vocab = vocab
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if args.device == '':
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+else:
+    device = args.device
 
 print("使用デバイス:", device)
 
