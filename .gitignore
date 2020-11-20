@@ -146,9 +146,6 @@ dataset/
 # logs
 logs/
 
-# checkpoints
-checkpoints/
-
 # chatlog
 chatlog/
 
