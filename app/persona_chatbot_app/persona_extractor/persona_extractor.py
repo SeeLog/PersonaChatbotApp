@@ -1,7 +1,5 @@
-from typing import Callable, List
+from typing import Callable
 import gensim
-import argparse
-from tqdm import tqdm
 import numpy as np
 
 

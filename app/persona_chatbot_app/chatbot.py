@@ -2,8 +2,6 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 
-from typing import List
-
 from .data.tokenizer.sentence_piece import SentencepieceTokenizer
 from .model.transformer.models import TargetPersonaEncoderDecoder
 from .data.vocab import Vocab
@@ -50,7 +48,7 @@ class TargetPersonaChatBot(ChatBotBase):
             # src = self.fields.src.process([self.fields.src.tokenize(text)]).to(self.device)
             src = self.tokenize(text).to(self.device)
 
-            src_mask = (src != self.pad_idx).unsqueeze(-2)
+            # src_mask = (src != self.pad_idx).unsqueeze(-2)
             out = self.top_k_top_p_decoding(src, persona, top_k, top_p, from_minimized_persona=from_minimized_persona)
 
             ret = []
