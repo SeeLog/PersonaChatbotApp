@@ -153,5 +153,3 @@ checkpoints/
 chatlog/
 
 .vscode/
-
-vocab.bin
