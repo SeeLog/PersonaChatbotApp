@@ -3,6 +3,6 @@
 
 cd app
 
-pipenv run pyinstaller persona_chatbot_app/bot/server.py --onefile
+pipenv run pyinstaller ./server.spec
 
 cp ./dist/server ./
