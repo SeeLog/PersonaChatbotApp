@@ -1,14 +1,16 @@
 [[source]]
-name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
-
-[dev-packages]
+name = "pypi"
 
 [packages]
-torch = "==1.7.0+cu101"
-torchvision = "==0.8.1+cu101"
-torchaudio = "==0.7.0"
+torch = "==1.7.0"
+flask = "*"
+sentencepiece = "*"
+gensim = "*"
+
+[dev-packages]
+pyinstaller = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"

@@ -1,4 +1,5 @@
-import MeCab
+# import MeCab
+from subprocess import Popen, PIPE
 
 from typing import List
 from ..tokenizer.tokenizer_base import TokenizerBase
@@ -9,11 +10,21 @@ TYPE = "助詞-終助詞"
 
 class MecabEndConcatTokenizer(TokenizerBase):
     '''
-    MeCabの標準辞書で形態素解析 -> 「ござる よ」のような機能語を連結してtokenizeする
+    MeCabのIPADicで形態素解析 -> 「ござる よ」のような機能語を連結してtokenizeする
     '''
     def __init__(self):
         super().__init__()
-        self.mecab = MeCab.Tagger("-Ochasen")
+        # self.mecab = MeCab.Tagger("-Ochasen")
+
+    def __mecab(self, sentence: str) -> str:
+        p = Popen(["mecab", "-Ochasen"], stdin=PIPE, stdout=PIPE)
+        o, e = p.communicate(sentence.encode("utf-8"))
+        ret = o.decode("utf-8")
+
+        if "[!tmp.empty()]" in ret:
+            raise RuntimeError("MeCab Error: " + ret)
+
+        return ret
 
     def tokenize(self, sentence: str) -> List[str]:
         '''
@@ -26,7 +37,8 @@ class MecabEndConcatTokenizer(TokenizerBase):
         return self._remove(self.wakachi(sentence)).split(" ")
 
     def wakachi(self, text: str) -> str:
-        parse = [item.split("\t") for item in self.mecab.parse(text).split("\n")]
+        # parse = [item.split("\t") for item in self.mecab.parse(text).split("\n")]
+        parse = [item.split("\t") for item in self.__mecab(text).split("\n")]
         parse = [p for p in parse if len(p) > 3]
 
         if len(parse) < 2:

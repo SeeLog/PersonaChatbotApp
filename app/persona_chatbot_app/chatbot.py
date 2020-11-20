@@ -4,8 +4,10 @@ import numpy as np
 
 from typing import List
 
-from .data.japanese_text import JapaneseTextWithID
+from .data.tokenizer.sentence_piece import SentencepieceTokenizer
 from .model.transformer.models import TargetPersonaEncoderDecoder
+from .data.vocab import Vocab
+
 
 
 class ChatBotBase():
@@ -17,11 +19,12 @@ class ChatBotBase():
 
 
 class TargetPersonaChatBot(ChatBotBase):
-    def __init__(self, model: TargetPersonaEncoderDecoder, fields: JapaneseTextWithID, device: torch.device, pad_idx=1, sos_idx=2, eos_idx=3, unk_idx=0, max_len=64) -> None:
+    def __init__(self, model: TargetPersonaEncoderDecoder, tokenizer: SentencepieceTokenizer, vocab: Vocab, device: torch.device, pad_idx=1, sos_idx=2, eos_idx=3, unk_idx=0, max_len=64) -> None:
         super().__init__(model)
 
         self.model = model
-        self.fields = fields
+        self.vocab = vocab
+        self.tokenizer = tokenizer
         self.device = device
         self.pad_idx = pad_idx
         self.sos_idx = sos_idx
@@ -29,7 +32,7 @@ class TargetPersonaChatBot(ChatBotBase):
         self.unk_idx = unk_idx
         self.max_len = max_len
 
-    def __call__(self, text: str, persona: torch.tensor, decode_method="top", top_k=50, top_p=0.95, from_minimized_persona: bool = False) -> str:
+    def __call__(self, text: str, persona: torch.tensor, top_k=50, top_p=0.95, from_minimized_persona: bool = False) -> str:
         '''
         テキストとペルソナを受け取って応答を返す
 
@@ -44,59 +47,21 @@ class TargetPersonaChatBot(ChatBotBase):
         self.model.eval()
 
         with torch.no_grad():
-            src = self.fields.src.process([self.fields.src.tokenize(text)]).to(self.device)
+            # src = self.fields.src.process([self.fields.src.tokenize(text)]).to(self.device)
+            src = self.tokenize(text).to(self.device)
+
             src_mask = (src != self.pad_idx).unsqueeze(-2)
-            if decode_method.lower() == "top":
-                out = self.top_k_top_p_decoding(src, persona, top_k, top_p, from_minimized_persona=from_minimized_persona)
-            else:
-                out = self.greedy_decode(src, src_mask, persona, max_len=self.max_len, start_symbol=self.sos_idx)
+            out = self.top_k_top_p_decoding(src, persona, top_k, top_p, from_minimized_persona=from_minimized_persona)
 
             ret = []
 
             for i in range(1, out.size(1)):
-                sym = self.fields.tgt.vocab.itos[out[0, i]]
-                if sym == self.fields.tgt.vocab.itos[self.eos_idx]:
+                sym = self.vocab.itos[out[0, i]]
+                if sym == self.vocab.itos[self.eos_idx]:
                     break
                 ret.append(sym)
 
             return " ".join(ret)
-
-
-    def greedy_decode(self, src: torch.tensor, src_mask: torch.tensor, tgt_persona: torch.tensor, max_len: torch.tensor, start_symbol: int):
-        """
-        Greedy Decoding
-
-        :param model: encode()とdecode()が実装されたモデル
-        :param src: Source Tensor
-        :param src_mask: Source Mask
-        :param tgt_persona: ターゲットのペルソナ
-        :param max_len: Max Length
-        :param start_symbol: SOSシンボル
-
-        :return: Greedy DecodingされたTensor
-        """
-        memory = self.model.encode(src, src_mask)
-        ys = torch.ones(src.size(0), 1).fill_(start_symbol).type_as(src.data)
-        for i in range(max_len - 1):
-            out = self.model.decode(memory, src_mask, ys, self.subsequent_mask(ys.size(1)).type_as(src.data), tgt_persona[:, :ys.size(1), :])
-            prob = self.model.generator(out[:, -1])
-
-            # unk prob set to zero.
-            prob[:, self.unk_idx].fill_(float("-inf"))
-            if i == 0:
-                # <eos> prob set to zero.
-                prob[:, self.eos_idx].fill_(float("-inf"))
-
-            _, next_word = torch.max(prob, dim=1)
-            next_word = next_word.unsqueeze(-1)
-
-            ys = torch.cat([ys, next_word], dim=1)
-
-            if torch.sum(torch.max(ys == self.eos_idx, dim=-1)[0]) == ys.size(0):
-                # <eos> が全ミニバッチで出現した
-                break
-        return ys
-
 
     def top_k_top_p_decoding(self, src: torch.tensor, tgt_persona: torch.tensor, top_k: int = 0, top_p: float = 0.0, filter_value: float = float("-inf"), from_minimized_persona: bool = False) -> torch.tensor:
         """
@@ -186,3 +151,12 @@ class TargetPersonaChatBot(ChatBotBase):
         attn_shape = (1, size, size)
         subsequent_mask = np.triu(np.ones(attn_shape), k=1).astype('uint8')
         return torch.from_numpy(subsequent_mask) == 0
+
+    def tokenize(self, text: str):
+        tokens = [self.sos_idx] + [self.vocab.stoi[token] if token in self.vocab.stoi else self.unk_idx for token in self.tokenizer(text)] + [self.eos_idx]
+        if len(tokens) > self.max_len:
+            tokens = [tokens[:self.max_len]]
+        else:
+            tokens = [tokens + [self.pad_idx] * (self.max_len - len(tokens))]
+
+        return torch.tensor(tokens)

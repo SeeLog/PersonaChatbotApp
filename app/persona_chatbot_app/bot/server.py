@@ -8,11 +8,10 @@ from persona_chatbot_app.model.transformer import utils
 from persona_chatbot_app.model.transformer.models import make_target_persona_model
 from persona_chatbot_app.options import SentencePieceSimpleOption
 from persona_chatbot_app.data.tokenizer.sentence_piece import SentencepieceTokenizer
-from persona_chatbot_app.data.japanese_text import JapaneseTextWithID
 from persona_chatbot_app.persona_extractor.persona_extractor import PersonaExtractor
 from persona_chatbot_app.data.tokenizer.mecab_end_concat import MecabEndConcatTokenizer
 
-import cloudpickle
+import pickle
 from typing import Optional
 
 import argparse
@@ -46,14 +45,17 @@ args = parser.parse_args()
 
 opt = SentencePieceSimpleOption()
 
+# with open(args.vocab, mode='rb') as f:
+#     vocab = cloudpickle.load(f)
+
 with open(args.vocab, mode='rb') as f:
-    vocab = cloudpickle.load(f)
+    vocab = pickle.load(f)
 
 tokenizer = SentencepieceTokenizer(args.sentencepiece)
-fields = JapaneseTextWithID(tokenizer, max_length=opt.max_length)
+# fields = JapaneseTextWithID(tokenizer, max_length=opt.max_length)
 
-fields.src.vocab = vocab
-fields.tgt.vocab = vocab
+# fields.src.vocab = vocab
+# fields.tgt.vocab = vocab
 
 if args.device == '':
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -69,7 +71,9 @@ model = utils.load_checkpoint(model, args.model, device)
 model.eval()
 print("モデル読み込みOK")
 
-chatbot = TargetPersonaChatBot(model, fields, device)
+# chatbot = TargetPersonaChatBot(model, fields, device)
+chatbot = TargetPersonaChatBot(model, tokenizer, vocab, device)
+
 
 # ペルソナ用のトークナイザはMeCabベースのものにする
 extractor = PersonaExtractor(args.word_vec, tokenizer=MecabEndConcatTokenizer(), verbose=True)
@@ -224,6 +228,7 @@ def get_current_persona():
 
 
 def main():
+    print("サーバを起動します\n\n\n")
     api.run(host=args.ip, port=args.port)
 
 
