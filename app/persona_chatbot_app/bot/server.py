@@ -32,7 +32,7 @@ parser = argparse.ArgumentParser(description='サーバー起動オプション�
 parser.add_argument('-s', '--sentencepiece', default='./data/sentencepiece.model', help='SentencePieceのモデルを指定します．よくわからなければデフォルトでOKです．')
 parser.add_argument('-v', '--vocab', default='./data/vocab.bin', help='Chatbotのモデル用のVocabファイルを指定します．SentencePieceのものとは別です．')
 parser.add_argument('-m', '--model', default='./data/checkpoints/best_model.pt', help='モデルの重みファイルを指定します．')
-parser.add_argument('-w', '--word_vec', default='./data/style_sensitive.bin', help='Style-sensitive word vectorsの学習済みモデルを指定します．')
+parser.add_argument('-w', '--word_vec', default='./data/style_sensitive_dict.bin', help='Style-sensitive word vectorsの学習済みモデルを指定します．')
 parser.add_argument('-f', '--first_persona', default='やるでやんす', help='最初にセットするペルソナを指定します．')
 parser.add_argument('-d', '--device', default='', help='モデルを利用するデバイスを指定します．空の場合，自動で選択をします．')
 

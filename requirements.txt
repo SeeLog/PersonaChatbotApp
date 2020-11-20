@@ -1,0 +1,15 @@
+altgraph==0.17
+click==7.1.2
+dataclasses==0.8
+Flask==1.1.2
+future==0.18.2
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+numpy==1.19.4
+pyinstaller==4.1
+pyinstaller-hooks-contrib==2020.10
+sentencepiece==0.1.94
+torch==1.7.0
+typing-extensions==3.7.4.3
+Werkzeug==1.0.1

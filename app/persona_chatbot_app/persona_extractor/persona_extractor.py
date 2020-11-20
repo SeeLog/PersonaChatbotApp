@@ -1,6 +1,7 @@
 from typing import Callable
-import gensim
+# import gensim
 import numpy as np
+import pickle
 
 
 class PersonaExtractor():
@@ -27,9 +28,10 @@ class PersonaExtractor():
         self._load()
 
 
-
     def _load(self) -> None:
-        self.model = gensim.models.KeyedVectors.load_word2vec_format(self.model_path, binary=True)
+        # self.model = gensim.models.KeyedVectors.load_word2vec_format(self.model_path, binary=True)
+        with open(self.model_path, mode='rb') as f:
+            self.model = pickle.load(f)
 
     def extract(self, text: str) -> np.ndarray:
         """
@@ -42,7 +44,7 @@ class PersonaExtractor():
         words = self.tokenizer(text)
         n_words = []
         for word in words:
-            if word in self.model.wv.vocab:
+            if word in self.model:
                 n_words.append(word)
 
         while len(n_words) >= self.last_word_length:
@@ -51,7 +53,7 @@ class PersonaExtractor():
             word_vec_list = []
 
             for word in n_words:
-                if word in self.model.wv.vocab:
+                if word in self.model:
                     vec += self.model[word][:self.dim]
                     word_vec_list.append(self.model[word][:self.dim])
                     count += 1
@@ -71,7 +73,7 @@ class PersonaExtractor():
         vec = np.zeros(self.dim)
         count = 0
         for word in n_words:
-            if word in self.model.wv.vocab:
+            if word in self.model:
                 vec += self.model[word][:self.dim]
                 count += 1
 

@@ -3,6 +3,6 @@
 
 cd app
 
-pipenv run pyinstaller ./server.spec
+pipenv run python -m PyInstaller ./server.spec
 
-cp ./dist/server ./
+cp ./dist/chatbot_server ./

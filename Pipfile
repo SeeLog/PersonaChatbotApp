@@ -7,10 +7,8 @@ name = "pypi"
 torch = "==1.7.0"
 flask = "*"
 sentencepiece = "*"
-gensim = "*"
 
 [dev-packages]
-pyinstaller = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
