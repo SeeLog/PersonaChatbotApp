@@ -28,4 +28,4 @@ while getopts ":p:h" optKey; do
 done
 
 cd app
-python -m persona_chatbot_app.bot.server -p ${PORT} -i ${IP}
+pipenv run python -m persona_chatbot_app.bot.server -p ${PORT} -i ${IP}
