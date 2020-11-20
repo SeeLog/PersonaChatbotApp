@@ -1,11 +1,13 @@
 #!/bin/bash
 
 PORT=5000
+IP=0.0.0.0
 
 function usage {
     cat <<EOM
 Usage: $(basename "$0") [OPTION]...
-    -p, --port      ポート番号を指定
+    -p              ポート番号を指定
+    -i              IPまたはHostを指定
     -h, --help      このヘルプを表示
 EOM
     exit 2
@@ -13,8 +15,11 @@ EOM
 
 while getopts ":p:h" optKey; do
     case "$optKey" in
-        p|'--port')
+        p)
             PORT=${OPTARG}
+            ;;
+        i)
+            IP=${OPTARG}
             ;;
         '-h'|'--help'|* )
         usage
@@ -23,4 +28,4 @@ while getopts ":p:h" optKey; do
 done
 
 cd app
-python -m persona_chatbot_app.bot.server -p ${PORT}
+python -m persona_chatbot_app.bot.server -p ${PORT} -i ${IP}
