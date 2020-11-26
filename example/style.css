@@ -1,0 +1,140 @@
+body {
+    background-color: lemonchiffon;
+    display: flex;
+    flex-flow: column;
+    min-height: 100vh;
+}
+
+.generate {}
+
+main {
+    flex: 1;
+}
+
+footer {
+    width: 100%;
+    padding: 30px 0;
+}
+
+form.generate {
+    justify-content: center;
+    align-items: center;
+}
+
+.speech-bubble {
+    overflow: hidden;
+    padding-bottom: 16px;
+    margin-top: 24px;
+  }
+
+  .speech-bubble p {
+    margin: 0;
+  }
+
+  .faceicon img {
+      width: 48px;
+      height: auto;
+  }
+
+  .faceleft img {
+      margin-right: 4px;
+      margin-left: 8px;
+      float: left;
+  }
+
+  .speech-bubble:after {
+    clear: both;
+    content: "";
+    display: table;
+  }
+
+  .speech-bubble:before {
+    content: "";
+    display: table;
+  }
+
+  .sb-bubble:after,
+  .sb-bubble:before {
+    content: " ";
+    height: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 1.2em;
+    width: 0;
+  }
+
+  .sb-bubble {
+
+  }
+
+  .sb-left {
+    float: left;
+    margin-left: 20px;
+  }
+
+  .sb-right {
+    float: right;
+    margin-right: 20px;
+  }
+
+  /*** 現ライン風（フラット１） ***/
+
+  .sb-line2 {
+    border: solid 1px #c5d0e4;
+    border-radius: 1em;
+    max-width: 70%;
+    padding: .2em 1em;
+    position: relative;
+  }
+
+  .sb-line2.sb-left {
+    background: #f9f9f9;
+  }
+
+  .sb-line2.sb-left:after {
+    background: lemonchiffon;
+    border: solid #c5d0e4;
+    border-radius: 1.6em 0 0 1.6em;
+    border-width: 0 0 1px 1px;
+    height: 1.6em;
+    margin: -2.3em -1px 0 0;
+    right: 100%;
+    width: .8em;
+  }
+
+  .sb-line2.sb-left:before {
+    background: #f9f9f9;
+    border: solid #c5d0e4;
+    border-radius: 1.6em 0 0 1.6em;
+    border-width: 0 0 1px 1px;
+    height: 1.6em;
+    margin: -1.8em -1px 0 0;
+    right: 100%;
+    width: .8em;
+  }
+
+  .sb-line2.sb-right {
+    background: gold;
+  }
+
+  .sb-line2.sb-right:after {
+    background: lemonchiffon;
+    border: solid #c5d0e4;
+    border-radius: 0 1.6em 1.6em 0;
+    border-width: 0 1px 1px 0;
+    height: 1.6em;
+    left: 100%;
+    margin: -2.3em 0 0 -1px;
+    width: .8em;
+  }
+
+  .sb-line2.sb-right:before {
+    background: gold;
+    border: solid #c5d0e4;
+    border-radius: 0 1.6em 1.6em 0;
+    border-width: 0 1px 1px 0;
+    height: 1.6em;
+    left: 100%;
+    margin: -1.8em 0 0 -1px;
+    width: .8em;
+  }
