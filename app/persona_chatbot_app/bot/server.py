@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 import json
 
@@ -80,6 +81,7 @@ extractor = PersonaExtractor(args.word_vec, tokenizer=MecabEndConcatTokenizer(),
 
 
 api = Flask(__name__)
+CORS(api)
 
 response = "hello"
 
@@ -167,6 +169,7 @@ def set_persona():
             ret = {"success": True, "words": words}
             if return_tensor:
                 ret["persona_vector"] = to_vector(minimize_tensor(current_persona)).tolist()
+                ret["persona_dim"] = len(ret["persona_vector"])
 
             return jsonify(ret)
         else:
@@ -174,6 +177,8 @@ def set_persona():
 
             if return_tensor:
                 ret["persona_vector"] = None
+                ret["persona_dim"] = None
+
 
             return jsonify(ret)
     elif persona_vec is not None:
@@ -188,6 +193,7 @@ def set_persona():
 
         if return_tensor:
             ret["persona_vector"] = to_vector(persona_tensor).tolist()
+            ret["persona_dim"] = len(ret["persona_vector"])
 
         return jsonify(ret)
     else:
@@ -207,9 +213,13 @@ def get_persona():
     if sentence is not None:
         persona_tensor, words = _get_persona(sentence)
 
-        return jsonify({"words": words, "persona_vector": to_vector(minimize_tensor(persona_tensor)).tolist()})
+        ret = {"words": words, "persona_vector": to_vector(minimize_tensor(persona_tensor)).tolist()}
+
+        ret["persona_dim"] = len(ret["persona_vector"])
+
+        return jsonify(ret)
     else:
-        return jsonify({"persona_vector": None, "words": None})
+        return jsonify({"persona_vector": None, "words": None, "persona_dim": None})
 
 
 @api.route("/getCurrentPersona", methods=["GET"])
@@ -221,8 +231,11 @@ def get_current_persona():
 
     if last_minimized:
         ret["persona_vector"] = to_vector(current_persona).tolist()
+        ret["persona_dim"] = len(ret["persona_vector"])
+
     else:
         ret["persona_vector"] = to_vector(minimize_tensor(current_persona)).tolist()
+        ret["persona_dim"] = len(ret["persona_vector"])
 
     return jsonify(ret)
 
