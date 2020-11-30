@@ -37,7 +37,7 @@ parser.add_argument('-w', '--word_vec', default='./data/style_sensitive_dict.bin
 parser.add_argument('-f', '--first_persona', default='やるでやんす', help='最初にセットするペルソナを指定します．')
 parser.add_argument('-d', '--device', default='', help='モデルを利用するデバイスを指定します．空の場合，自動で選択をします．')
 
-parser.add_argument('-p', '--port', default=5000, type=int, help='ポート番号を指定します．')
+parser.add_argument('-p', '--port', default=5050, type=int, help='ポート番号を指定します．')
 parser.add_argument('-ip', '--ip', default='0.0.0.0', help='IPもしくはホストを指定します．')
 
 
@@ -200,26 +200,32 @@ def set_persona():
         return jsonify({"success": False})
 
 
-@api.route("/getPersona", methods=["POST"])
+@api.route("/getPersona", methods=["POST", "GET"])
 def get_persona():
     """
     渡された文からペルソナを計算して結果を返す
     計算するだけで反映はさせない
     """
     # sentence = request.args.get["sentence"]
-    json = json_decode()
-    sentence = json.get("sentence")
+    if request.method == "POST":
+        json = json_decode()
+        sentence = json.get("sentence")
+    elif request.method == "GET":
+        sentence = request.args.get("sentence", default=None)
 
     if sentence is not None:
         persona_tensor, words = _get_persona(sentence)
 
-        ret = {"words": words, "persona_vector": to_vector(minimize_tensor(persona_tensor)).tolist()}
+        if persona_tensor is not None:
+            ret = {"words": words, "persona_vector": to_vector(minimize_tensor(persona_tensor)).tolist(), "success": True}
+            ret["persona_dim"] = len(ret["persona_vector"])
+        else:
+            ret = {"words": None, "persona_vector": None, "persona_dim": None, "success": False}
 
-        ret["persona_dim"] = len(ret["persona_vector"])
 
         return jsonify(ret)
     else:
-        return jsonify({"persona_vector": None, "words": None, "persona_dim": None})
+        return jsonify({"persona_vector": None, "words": None, "persona_dim": None, "success": False})
 
 
 @api.route("/getCurrentPersona", methods=["GET"])
@@ -232,10 +238,15 @@ def get_current_persona():
     if last_minimized:
         ret["persona_vector"] = to_vector(current_persona).tolist()
         ret["persona_dim"] = len(ret["persona_vector"])
+        ret["words"] = None
 
     else:
         ret["persona_vector"] = to_vector(minimize_tensor(current_persona)).tolist()
         ret["persona_dim"] = len(ret["persona_vector"])
+        if len(current_persona_words) > 0:
+            ret["words"] = current_persona_words
+        else:
+            ret["words"] = None
 
     return jsonify(ret)
 

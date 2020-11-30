@@ -3,17 +3,62 @@ body {
     display: flex;
     flex-flow: column;
     min-height: 100vh;
+    height: 100%;
+    padding: 0;
+}
+
+html {
+    height: 100%;
 }
 
 .generate {}
 
 main {
     flex: 1;
+    overflow: auto;
+    width: 90%;
+    margin: 0 auto;
+    box-shadow: 4px 0 2px -2px goldenrod, -4px 0 2px -2px goldenrod;
+}
+
+
+
+h1.title {
+    color:brown;
+    text-shadow: 2px 2px 0.5px lightgray;
+    display: inline;
+}
+
+.config {
+    float: right;
+}
+
+.default-hidden {
+    display: none;
+}
+
+.alert {
+    display: none;
+}
+
+.alert-top {
+    position: fixed;
+    top: 50px;
+    width: 90%;
+    margin: 0 auto;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+header {
+    padding: 16px;
+    box-shadow: 0 2px 0 0 skyblue;
 }
 
 footer {
     width: 100%;
     padding: 30px 0;
+    box-shadow: 0 -2px 0 0 lightcoral;
 }
 
 form.generate {
@@ -21,77 +66,84 @@ form.generate {
     align-items: center;
 }
 
+.chat-frame {
+    margin: 0 auto;
+    padding: 4px;
+    height: 100%;
+}
+
 .speech-bubble {
     overflow: hidden;
     padding-bottom: 16px;
     margin-top: 24px;
-  }
+}
 
-  .speech-bubble p {
+.speech-bubble p {
     margin: 0;
-  }
+}
 
-  .faceicon img {
-      width: 48px;
-      height: auto;
-  }
+.faceicon img {
+    width: 48px;
+    height: auto;
+    border-radius: 50%;
 
-  .faceleft img {
-      margin-right: 4px;
-      margin-left: 8px;
-      float: left;
-  }
+    box-shadow: 0 0 5px 0 #777; /* CSS3 */
+}
 
-  .speech-bubble:after {
+.faceleft img {
+    margin-right: 4px;
+    margin-left: 8px;
+    float: left;
+}
+
+.speech-bubble:after {
     clear: both;
     content: "";
     display: table;
-  }
+}
 
-  .speech-bubble:before {
+.speech-bubble:before {
     content: "";
     display: table;
-  }
+}
 
-  .sb-bubble:after,
-  .sb-bubble:before {
+.sb-bubble:after,
+.sb-bubble:before {
     content: " ";
     height: 0;
     pointer-events: none;
     position: absolute;
     top: 1.2em;
     width: 0;
-  }
+}
 
-  .sb-bubble {
+.sb-bubble {}
 
-  }
-
-  .sb-left {
+.sb-left {
     float: left;
     margin-left: 20px;
-  }
+}
 
-  .sb-right {
+.sb-right {
     float: right;
     margin-right: 20px;
-  }
+}
 
-  /*** 現ライン風（フラット１） ***/
+/*** 現ライン風（フラット１） ***/
 
-  .sb-line2 {
+.sb-flat {
     border: solid 1px #c5d0e4;
     border-radius: 1em;
     max-width: 70%;
     padding: .2em 1em;
     position: relative;
-  }
+}
 
-  .sb-line2.sb-left {
+.sb-flat.sb-left {
     background: #f9f9f9;
-  }
+}
 
-  .sb-line2.sb-left:after {
+.sb-flat.sb-left:after {
     background: lemonchiffon;
     border: solid #c5d0e4;
     border-radius: 1.6em 0 0 1.6em;
@@ -100,9 +152,9 @@ form.generate {
     margin: -2.3em -1px 0 0;
     right: 100%;
     width: .8em;
-  }
+}
 
-  .sb-line2.sb-left:before {
+.sb-flat.sb-left:before {
     background: #f9f9f9;
     border: solid #c5d0e4;
     border-radius: 1.6em 0 0 1.6em;
@@ -111,13 +163,13 @@ form.generate {
     margin: -1.8em -1px 0 0;
     right: 100%;
     width: .8em;
-  }
+}
 
-  .sb-line2.sb-right {
+.sb-flat.sb-right {
     background: gold;
-  }
+}
 
-  .sb-line2.sb-right:after {
+.sb-flat.sb-right:after {
     background: lemonchiffon;
     border: solid #c5d0e4;
     border-radius: 0 1.6em 1.6em 0;
@@ -126,9 +178,9 @@ form.generate {
     left: 100%;
     margin: -2.3em 0 0 -1px;
     width: .8em;
-  }
+}
 
-  .sb-line2.sb-right:before {
+.sb-flat.sb-right:before {
     background: gold;
     border: solid #c5d0e4;
     border-radius: 0 1.6em 1.6em 0;
@@ -137,4 +189,4 @@ form.generate {
     left: 100%;
     margin: -1.8em 0 0 -1px;
     width: .8em;
-  }
+}

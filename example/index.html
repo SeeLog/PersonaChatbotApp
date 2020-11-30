@@ -24,33 +24,63 @@
 </head>
 
 <body>
-    <main>
-        <h2>Persona Chatbot App</h2>
-        <div class="faceicon faceleft">
-            <img src="./resource/robot.png" alt="">
+    <header>
+        <h1 class="title">Persona Chatbot App</h1>
+        <button class="btn btn-secondary config" data-toggle="modal" data-target="#config-modal">
+            <img src="resource/config.svg" alt="" width="32px">
+        </button>
+    </header>
+    <main style="">
+        <div class="alert alert-danger alert-top" role="alert"></div>
+        <div class="alert alert-success alert-top" role="alert"></div>
+        <div class="chat-frame">
+
         </div>
-        <div class="speech-bubble">
-            <div class="sb-bubble sb-line2 sb-left">
-                aaaa
-            </div>
-        </div>
-        </div>
-        <div class="speech-bubble">
-            <div class="sb-bubble sb-line2 sb-right">
-                bbbb
-            </div>
-        </div>
-        <div id="display"></div>
+        <div class="chat-bottom"></div>
     </main>
 
-    <footer>
+    <div class="modal fade" id="config-modal" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="label1">ペルソナ設定</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="http://artemis.slp.nitech.ac.jp:5050/getPersona" class="get-persona form-inline"
+                        accept-charset="UTF-8" method="post" onsubmit="getPersonaFromSentence(); return false;">
+                        <input type="text" class="form-control" name="sentence" id="persona-sentence" placeholder="しゃべらせたいフレーズをセットして抽出します"
+                            style="width: -webkit-calc(100% - 64px);"><button type="submit" class="btn btn-primary" style="width: 64px;">抽出</button>
+                    </form>
+                    <div id="extract-result" class="default-hidden">
+                        抽出された単語: <span id="extracted"></span></label>
+                    </div>
+                    <div class="default-hidden slide-toggle">
+                        <button class="btn" data-toggle="collapse" data-target="#vectors">ペルソナベクトルを表示/非表示</button>
+                    </div>
+                    <div class="slide-bar container-fluid collapse" id="vectors">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-primary" onclick="setPersona();">決定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="margin: 0;">
         <form action="http://artemis.slp.nitech.ac.jp:5050/generateReply" class="generate form-inline"
             accept-charset="UTF-8" method="post" onsubmit="sendGenerate(); return false;">
-            <input type="text" class="form-control" name="sentence" id="sentence" placeholder="おしゃべりしてね"
+            <input type="text" class="form-control" name="sentence" id="send-sentence" placeholder="おしゃべりしてね"
                 style="width: -webkit-calc(90% - 120px);">
             <button type="submit" class="btn btn-primary" style="width: 120px;">おしゃべり</button>
         </form>
     </footer>
+    <form action="http://artemis.slp.nitech.ac.jp:5050/setPersona" class="set-persona default-hidden"></form>
 </body>
 
 </html>
