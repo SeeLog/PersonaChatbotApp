@@ -1,0 +1,398 @@
+openapi: 3.0.1
+info:
+  title: PersonaChatbotApp
+  description: ''
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: http://localhost:5050
+tags:
+- name: generate
+  description: 生成に関するAPIです
+- name: persona
+  description: ペルソナベクトルに関するAPIです
+
+paths:
+  /generateReply:
+    post:
+      tags:
+      - generate
+      summary: 実際にChatbotからの応答を生成します．
+      description: sentenceに対する応答をreplyとして得ることができます．JSONを用いてやり取りを行います．
+      operationId: generateSentence
+      requestBody:
+        description: POSTされた sentence に対する応答を返します．
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sentence:
+                  type: string
+                  description: Chatbotからの応答が入ります
+            example:
+              sentence: ご機嫌いかが？
+        required: true
+      responses:
+        200:
+          description: 成功時．応答生成に失敗した場合は reply\:null となります．
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reply:
+                    type: string
+                    description: 応答生成に失敗した場合はnullを返します．
+                    nullable: true
+              example:
+                reply: よろしくてよ
+      x-codegen-request-body-name: sentence
+  /setPersona:
+    post:
+      tags:
+      - persona
+      summary: ペルソナを設定します．
+      description: 応答生成時のペルソナを設定します．ベクトルで直接指定することも元になる文を指定することもできます．
+      operationId: setPersona
+      requestBody:
+        required: true
+        description: POSTされた sentence に対してペルソナベクトルを計算し，セットします．
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    sentence:
+                      type: string
+                    is_return_vector:
+                      type: boolean
+                      
+                - type: object
+                  properties:
+                    persona_vector:
+                      type: array
+                      items:
+                        type: number
+            examples:
+              文からセットする場合:
+                value:
+                  sentence: "今日はいい天気ですわ"
+              ベクトルからセットする場合:
+                value:
+                  persona_vector:
+                    - 3.0004849433898926
+                    - 1.2562720775604248
+                    - -1.6766093969345093
+                    -  -5.564531326293945
+                    -  0.3128020763397217
+                    -  -4.873771667480469
+                    -  -16.99335289001465
+                    -  -0.9231509566307068
+                    -  1.0056819915771484
+                    -  1.1447275876998901
+                    -  10.877058029174805
+                    -  -6.481485843658447
+                    -  -2.092629909515381
+                    -  -10.66524600982666
+                    -  -18.003042221069336
+                    -  2.1850879192352295
+              セットした結果も得たい場合:
+                value:
+                  sentence: "今日はいい天気ですわ"
+                  is_return_vector: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  persona_dim:
+                    type: integer
+                    description: セットしたペルソナベクトルの次元数が入ります．
+                    nullable: true
+                  persona_vector:
+                    type: array
+                    items:
+                      type: integer
+                    description: セットしたペルソナベクトルが入ります．
+                    nullable: true
+                  success:
+                    type: boolean
+                    description: ペルソナベクトルの抽出に成功したかどうかが入ります．
+                  words:
+                    type: array
+                    items:
+                      type: string
+                    description: 抽出に用いられた単語が入ります．
+                    nullable: true
+              examples:
+                文からセットした場合:
+                  value:
+                    success: true
+                    words:
+                      - "今日"
+                      - "は"
+                      - "いい"
+                      - "天気"
+                      - "ですわ"
+                ベクトルからセットした場合:
+                  value:
+                    success: true
+                    words: null
+                セットした結果も得たかった場合:
+                  value:
+                    persona_dim: 16
+                    persona_vector:
+                      - 2.3650763034820557
+                      - 1.2259101867675781
+                      - 0.6207224130630493
+                      - -2.241058588027954
+                      - 2.708944797515869
+                      - -1.1380574703216553
+                      - -8.723382949829102
+                      - -2.2508013248443604
+                      - 3.7415854930877686
+                      - -2.192183494567871
+                      - 7.557952404022217
+                      - 1.280122995376587
+                      - -4.976175785064697
+                      - 0.09363288432359695
+                      - -13.903959274291992
+                      - -0.6420319080352783
+                    success: true
+                    words:
+                      - 今日
+                      - は
+                      - いい
+                      - 天気
+                      - ですわ
+                    
+  /getPersona:
+    get:
+      tags:
+      - persona
+      summary: ペルソナベクトルを抽出します．
+      description: 送信された文からペルソナベクトルを抽出します．抽出して結果を返すだけであり，反映は行いません．
+      operationId: getPersona_get
+      parameters:
+      - name: "sentence"
+        in: "query"
+        description: "抽出したい文を入力します．"
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  persona_dim:
+                    type: integer
+                    description: 抽出したペルソナベクトルの次元数が入ります．
+                    nullable: true
+                  persona_vector:
+                    type: array
+                    items:
+                      type: integer
+                    description: 抽出したペルソナベクトルが入ります．
+                    nullable: true
+                  success:
+                    type: boolean
+                    description: ペルソナベクトルの抽出に成功したかどうかが入ります．
+                  words:
+                    type: array
+                    items:
+                      type: string
+                    description: 抽出に用いられた単語が入ります．
+                    nullable: true
+              example:
+                    persona_dim: 16
+                    persona_vector:
+                      - 2.3650763034820557
+                      - 1.2259101867675781
+                      - 0.6207224130630493
+                      - -2.241058588027954
+                      - 2.708944797515869
+                      - -1.1380574703216553
+                      - -8.723382949829102
+                      - -2.2508013248443604
+                      - 3.7415854930877686
+                      - -2.192183494567871
+                      - 7.557952404022217
+                      - 1.280122995376587
+                      - -4.976175785064697
+                      - 0.09363288432359695
+                      - -13.903959274291992
+                      - -0.6420319080352783
+                    success: true
+                    words:
+                      - 今日
+                      - は
+                      - いい
+                      - 天気
+                      - ですわ
+    post:
+      tags:
+      - persona
+      summary: ペルソナベクトルを抽出します．
+      description: 送信された文からペルソナベクトルを抽出します．抽出して結果を返すだけであり，反映は行いません．
+      operationId: getPersona_post
+      requestBody:
+        required: true
+        description: POSTされた sentence に対してペルソナベクトルを抽出します．
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sentence:
+                  type: string
+
+            example:
+              sentence: "今日はいい天気ですわ"
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  persona_dim:
+                    type: integer
+                    description: 抽出したペルソナベクトルの次元数が入ります．
+                    nullable: true
+                  persona_vector:
+                    type: array
+                    items:
+                      type: integer
+                    description: 抽出したペルソナベクトルが入ります．
+                    nullable: true
+                  success:
+                    type: boolean
+                    description: ペルソナベクトルの抽出に成功したかどうかが入ります．
+                  words:
+                    type: array
+                    items:
+                      type: string
+                    description: 抽出に用いられた単語が入ります．
+                    nullable: true
+              example:
+                    persona_dim: 16
+                    persona_vector:
+                      - 2.3650763034820557
+                      - 1.2259101867675781
+                      - 0.6207224130630493
+                      - -2.241058588027954
+                      - 2.708944797515869
+                      - -1.1380574703216553
+                      - -8.723382949829102
+                      - -2.2508013248443604
+                      - 3.7415854930877686
+                      - -2.192183494567871
+                      - 7.557952404022217
+                      - 1.280122995376587
+                      - -4.976175785064697
+                      - 0.09363288432359695
+                      - -13.903959274291992
+                      - -0.6420319080352783
+                    success: true
+                    words:
+                      - 今日
+                      - は
+                      - いい
+                      - 天気
+                      - ですわ
+                      
+  /getCurrentPersona:
+    get:
+      tags:
+      - persona
+      summary: 現在セットされているペルソナベクトルを取得します．
+      description: 現在セットされているペルソナベクトルを取得します．また，抽出に用いられた単語が確定している場合はそれも取得します．
+      operationId: getCurrentPersona
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  persona_dim:
+                    type: integer
+                    description: 抽出したペルソナベクトルの次元数が入ります．
+                    nullable: true
+                  persona_vector:
+                    type: array
+                    items:
+                      type: integer
+                    description: 抽出したペルソナベクトルが入ります．
+                    nullable: true
+                  success:
+                    type: boolean
+                    description: ペルソナベクトルの抽出に成功したかどうかが入ります．
+                  words:
+                    type: array
+                    items:
+                      type: string
+                    description: 抽出に用いられた単語が入ります．
+                    nullable: true
+              examples:
+                抽出に用いた単語が確定している場合:
+                  value:
+                    persona_dim: 16
+                    persona_vector:
+                      - 2.3650763034820557
+                      - 1.2259101867675781
+                      - 0.6207224130630493
+                      - -2.241058588027954
+                      - 2.708944797515869
+                      - -1.1380574703216553
+                      - -8.723382949829102
+                      - -2.2508013248443604
+                      - 3.7415854930877686
+                      - -2.192183494567871
+                      - 7.557952404022217
+                      - 1.280122995376587
+                      - -4.976175785064697
+                      - 0.09363288432359695
+                      - -13.903959274291992
+                      - -0.6420319080352783
+                    words:
+                      - 今日
+                      - は
+                      - いい
+                      - 天気
+                      - ですわ
+                ベクトルを直接セットしているなど，抽出に用いた単語がわからない場合:
+                  value:
+                    persona_dim: 16
+                    persona_vector:
+                      - 2.3650763034820557
+                      - 1.2259101867675781
+                      - 0.6207224130630493
+                      - -2.241058588027954
+                      - 2.708944797515869
+                      - -1.1380574703216553
+                      - -8.723382949829102
+                      - -2.2508013248443604
+                      - 3.7415854930877686
+                      - -2.192183494567871
+                      - 7.557952404022217
+                      - 1.280122995376587
+                      - -4.976175785064697
+                      - 0.09363288432359695
+                      - -13.903959274291992
+                      - -0.6420319080352783
+                    words: null
+                      
