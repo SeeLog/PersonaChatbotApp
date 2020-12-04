@@ -32,7 +32,7 @@ var hideWords = function() {
     words_obj = $('#extract-result');
     toggle = $(".slide-toggle")
     words_obj.fadeOut(500);
-    toggle.fadeOut(500);
+    //toggle.fadeOut(500);
 }
 
 let valueMax = 50;
@@ -241,12 +241,13 @@ var setPersona = function() {
                 personaWords = data["words"];
                 if (personaWords == null) {
                     vectorChanged = true;
+                    hideWords();
                 }
                 else {
                     vectorChanged = false;
+                    showWords();
                 }
                 curVector = data["persona_vector"];
-                showWords();
                 appendSlideBars(data);
                 // 成功
                 showSuccess("ペルソナのセットに成功しました！");
@@ -260,6 +261,42 @@ var setPersona = function() {
 
         .fail(function (xhr, textStatus, errorThrown) {
             showAlert("ペルソナのセットに失敗しました．サーバは起動していますか？")
+        })
+    }
+    catch (e) {
+        showAlert(e);
+    }
+}
+
+var getCurrentPersona = function() {
+    try {
+        $.ajax({
+            url: $('form.get-current-persona').attr("action"),
+            type: "GET",
+            contentType: "application/json",
+            scriptCharset: "utf-8"
+        })
+
+        .done(function (data, textStatus, xhr) {
+            if (data["persona_dim"] != null) {
+                personaWords = data["words"];
+
+                curVector = data["persona_vector"];
+
+                if (personaWords != null && personaWords.length > 0) {
+                    $("#extracted").text(data["words"]);
+                    showWords();
+                }
+                else {
+                    $("#extracted").text("");
+                    hideWords();
+                }
+
+                appendSlideBars(data);
+            }
+        })
+        .fail(function (xhr, textStatus, errorThrown) {
+            showAlert("サーバの状態の取得に失敗しました．サーバは起動していますか？")
         })
     }
     catch (e) {

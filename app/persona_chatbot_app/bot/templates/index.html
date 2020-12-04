@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Document</title>
+    <title>Persona Chatbot App</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -26,7 +26,7 @@
 <body>
     <header>
         <h1 class="title">Persona Chatbot App</h1>
-        <button class="btn btn-secondary config" data-toggle="modal" data-target="#config-modal">
+        <button class="btn btn-secondary config" data-toggle="modal" data-target="#config-modal" onclick="getCurrentPersona();">
             <img src="/static/img/config.svg" alt="" width="32px">
         </button>
     </header>
@@ -49,7 +49,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="http://localhost:5050/getPersona" class="get-persona form-inline"
+                    <form action="/getPersona" class="get-persona form-inline"
                         accept-charset="UTF-8" method="post" onsubmit="getPersonaFromSentence(); return false;">
                         <input type="text" class="form-control" name="sentence" id="persona-sentence" placeholder="しゃべらせたいフレーズをセットして抽出します"
                             style="width: -webkit-calc(100% - 64px);"><button type="submit" class="btn btn-primary" style="width: 64px;">抽出</button>
@@ -73,14 +73,16 @@
     </div>
 
     <footer style="margin: 0;">
-        <form action="http://localhost:5050/generateReply" class="generate form-inline"
+        <form action="/generateReply" class="generate form-inline"
             accept-charset="UTF-8" method="post" onsubmit="sendGenerate(); return false;">
             <input type="text" class="form-control" name="sentence" id="send-sentence" placeholder="おしゃべりしてね"
                 style="width: -webkit-calc(90% - 120px);">
             <button type="submit" class="btn btn-primary" style="width: 120px;">おしゃべり</button>
         </form>
     </footer>
-    <form action="http://localhost:5050/setPersona" class="set-persona default-hidden"></form>
+    <form action="/setPersona" class="set-persona default-hidden"></form>
+    <form action="/getCurrentPersona" class="get-current-persona default-hidden"></form>
+
 </body>
 
 </html>
