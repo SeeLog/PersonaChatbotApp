@@ -120,16 +120,18 @@ def to_vector(tensor: torch.tensor) -> torch.tensor:
 def example():
     return render_template("index.html")
 
-@api.route("/generateReply", methods=["POST"])
+@api.route("/generateReply", methods=["POST", "GET"])
 def generate_reply():
     """
     JSONでリプライを返す
     """
     global current_persona
     # sentence = request.args.get("sentence")
-    json = json_decode()
-
-    sentence = json.get("sentence")
+    if request.method == "POST":
+        json = json_decode()
+        sentence = json.get("sentence")
+    elif request.method == "GET":
+        sentence = request.args.get("sentence", default=None)
 
     if sentence is not None:
         reply = chatbot(sentence, current_persona, from_minimized_persona=last_minimized).replace(" ", "").replace("▁", " ")

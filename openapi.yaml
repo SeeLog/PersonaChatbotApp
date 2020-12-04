@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: PersonaChatbotApp
-  description: ''
+  description: 'PersonaChatbotAppで用いられるAPIについての説明です．基本的に応答はすべてJSONによって返ってきます．'
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -16,6 +16,32 @@ tags:
 
 paths:
   /generateReply:
+    get:
+      tags:
+      - generate
+      summary: 実際にChatbotからの応答を生成します．
+      description: sentenceに対する応答をreplyとして得ることができます．JSONを用いてやり取りを行います．
+      operationId: generateSentence-get
+      parameters:
+      - name: "sentence"
+        in: "query"
+        description: "Chatbotへ呼びかける内容を入れます．"
+        schema:
+          type: string
+      responses:
+        200:
+          description: 成功時．応答生成に失敗した場合は reply\:null となります．
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reply:
+                    type: string
+                    description: 応答生成に失敗した場合はnullを返します．
+                    nullable: true
+              example:
+                reply: よろしくてよ
     post:
       tags:
       - generate
@@ -31,7 +57,7 @@ paths:
               properties:
                 sentence:
                   type: string
-                  description: Chatbotからの応答が入ります
+                  description: Chatbotへ呼びかける内容を入れます．
             example:
               sentence: ご機嫌いかが？
         required: true
@@ -49,7 +75,7 @@ paths:
                     nullable: true
               example:
                 reply: よろしくてよ
-      x-codegen-request-body-name: sentence
+
   /setPersona:
     post:
       tags:
@@ -70,7 +96,7 @@ paths:
                       type: string
                     is_return_vector:
                       type: boolean
-                      
+
                 - type: object
                   properties:
                     persona_vector:
@@ -172,7 +198,7 @@ paths:
                       - いい
                       - 天気
                       - ですわ
-                    
+
   /getPersona:
     get:
       tags:
@@ -312,7 +338,7 @@ paths:
                       - いい
                       - 天気
                       - ですわ
-                      
+
   /getCurrentPersona:
     get:
       tags:
@@ -395,4 +421,3 @@ paths:
                       - -13.903959274291992
                       - -0.6420319080352783
                     words: null
-                      
