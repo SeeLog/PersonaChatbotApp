@@ -17,9 +17,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
     </script>
-    <script src="scripts.js"></script>
+    <script src="/static/js/scripts.js"></script>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
 
 </head>
 
@@ -27,7 +27,7 @@
     <header>
         <h1 class="title">Persona Chatbot App</h1>
         <button class="btn btn-secondary config" data-toggle="modal" data-target="#config-modal">
-            <img src="resource/config.svg" alt="" width="32px">
+            <img src="/static/img/config.svg" alt="" width="32px">
         </button>
     </header>
     <main style="">
@@ -49,7 +49,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="http://artemis.slp.nitech.ac.jp:5050/getPersona" class="get-persona form-inline"
+                    <form action="http://localhost:5050/getPersona" class="get-persona form-inline"
                         accept-charset="UTF-8" method="post" onsubmit="getPersonaFromSentence(); return false;">
                         <input type="text" class="form-control" name="sentence" id="persona-sentence" placeholder="しゃべらせたいフレーズをセットして抽出します"
                             style="width: -webkit-calc(100% - 64px);"><button type="submit" class="btn btn-primary" style="width: 64px;">抽出</button>
@@ -73,14 +73,14 @@
     </div>
 
     <footer style="margin: 0;">
-        <form action="http://artemis.slp.nitech.ac.jp:5050/generateReply" class="generate form-inline"
+        <form action="http://localhost:5050/generateReply" class="generate form-inline"
             accept-charset="UTF-8" method="post" onsubmit="sendGenerate(); return false;">
             <input type="text" class="form-control" name="sentence" id="send-sentence" placeholder="おしゃべりしてね"
                 style="width: -webkit-calc(90% - 120px);">
             <button type="submit" class="btn btn-primary" style="width: 120px;">おしゃべり</button>
         </form>
     </footer>
-    <form action="http://artemis.slp.nitech.ac.jp:5050/setPersona" class="set-persona default-hidden"></form>
+    <form action="http://localhost:5050/setPersona" class="set-persona default-hidden"></form>
 </body>
 
 </html>

@@ -157,7 +157,7 @@ var makeRightBox = function(sentence) {
 }
 
 var makeLeftBox = function(reply) {
-    return '<div class="faceicon faceleft"><img src="./resource/robot.png" alt=""></div><div class="speech-bubble"><div class="sb-bubble sb-flat sb-left">'
+    return '<div class="faceicon faceleft"><img src="/static/img/robot.png" alt=""></div><div class="speech-bubble"><div class="sb-bubble sb-flat sb-left">'
         + reply + '</div></div>';
 }
 

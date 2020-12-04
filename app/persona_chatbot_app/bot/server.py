@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 
 import json
@@ -115,6 +115,10 @@ def to_vector(tensor: torch.tensor) -> torch.tensor:
     """
     return tensor[0, 0, :]
 
+
+@api.route("/")
+def example():
+    return render_template("index.html")
 
 @api.route("/generateReply", methods=["POST"])
 def generate_reply():
