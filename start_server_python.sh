@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PORT=5000
+PORT=5050
 IP=0.0.0.0
 
 function usage {
