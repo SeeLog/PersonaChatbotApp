@@ -36,14 +36,15 @@ APIはopenapiを用いて記述してあります．
 ## フロントエンド実装の例について
 `app/persona_chatbot_app/bot/templates/index.html` や `app/persona_chatbot_app/bot/static/` 以下がそれに当たります．
 
-Flaskによって自動起動するように設定してあるので，上記の方法でサーバを実行した上でlocalhost等にアクセスするとフロントエンド実装が見れると思います．
+Flaskによって自動起動するように設定してあるので，上記の方法でサーバを実行した上でChromeでlocalhost等にアクセスするとフロントエンド実装が見れると思います．
+Chromeを想定した実装になっているので他のブラウザだと表示がブレるかもしれません．
 
 つまり
 ```
 % ./start_server_python.sh -p 8080
 ```
 などとしてから
-`http://localhost:8080`にアクセスすれば良いというわけです．
+Chromeで`http://localhost:8080`にアクセスすれば良いというわけです．
 ポート開放等の設定が必要になるかもしれません．
 
 とくにGPUマシン上でサーバを立ち上げた場合，ポートフォワーディングなどをするとよいでしょう．
