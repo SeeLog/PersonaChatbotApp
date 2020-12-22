@@ -144,7 +144,7 @@ def generate_reply():
 def set_persona():
     """
     渡された文からペルソナを計算してセットする
-    ついでに計算結果を返すかどうかを is_return_vector で指定もできる
+    ついでに計算結果を返すかどうかを should_return_vector で指定もできる
     """
     global current_persona
     global current_persona_words
@@ -158,7 +158,7 @@ def set_persona():
     persona_vec = json.get("persona_vector")
 
     # return_tensor = request.form.get("is_return_tensor")
-    return_tensor = json.get("is_return_vector")
+    return_tensor = json.get("should_return_vector")
 
     if return_tensor is None:
         return_tensor = False

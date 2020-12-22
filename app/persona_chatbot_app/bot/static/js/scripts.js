@@ -208,7 +208,7 @@ var getPersonaFromSentence = function() {
 
 var setPersona = function() {
     var json = {
-        "is_return_vector": true
+        "should_return_vector": true
     }
 
     var sentence = $('#persona-sentence').val();
