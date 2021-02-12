@@ -22,7 +22,7 @@
 その際は `install_mecab_example.sh` を参考にMeCabと辞書をインストールしてください．
 Ubuntu16.04の場合はそのまま使えるかもしれません．
 ```
-./install_mecab_example.sh
+% ./install_mecab_example.sh
 ```
 ### サーバを実行する
 ```
