@@ -18,6 +18,9 @@
 ```
 % pipenv install
 ```
+また，MeCabとMeCab用の辞書でIPADicのUTF-8のものが入っていない場合，正常に起動ができません．
+その際は `install_mecab_example.sh` を参考にMeCabと辞書をインストールしてください．
+Ubuntu16.04の場合はそのまま使えるかもしれません．
 ### サーバを実行する
 ```
 % ./start_server_python.sh
