@@ -57,4 +57,4 @@ Chromeを想定した実装になっているので他のブラウザだと表�
 
 ## モデルについて
 最大ファイル制限内に収まるファイルサイズでしたので学習済みモデルもcloneするだけで用いることができます．
-さらにペルソナの最小の次元数を変更したい場合や，その他のモデルを用いたい場合はこちら(https://drive.google.com/drive/folders/1oamKariMb2hx-RBrY-rfUqomFpwbu36O?usp=sharing)をご利用ください．
+さらにペルソナの最小の次元数を変更したい場合や，その他のモデルを用いたい場合は[こちら](https://drive.google.com/drive/folders/1oamKariMb2hx-RBrY-rfUqomFpwbu36O?usp=sharing)をご利用ください．
