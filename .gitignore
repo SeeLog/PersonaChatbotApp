@@ -149,3 +149,6 @@ logs/
 chatlog/
 
 .vscode/
+
+# bin
+style_sensitive_dict.bin

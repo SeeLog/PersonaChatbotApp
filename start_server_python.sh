@@ -28,4 +28,10 @@ while getopts ":p:h" optKey; do
 done
 
 cd app
+
+if [ ! -e ./data/style_sensitive_dict.bin ]; then
+    cat ./data/style_sensitive_dict.bin00 ./data/style_sensitive_dict.bin01 > ./data/style_sensitive_dict.bin
+    echo "Concat style-sensitive dict"
+fi
+
 pipenv run python -m persona_chatbot_app.bot.server -p ${PORT} -i ${IP}
